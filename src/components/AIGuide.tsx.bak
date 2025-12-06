@@ -1,0 +1,89 @@
+import React, { useState, useEffect } from 'react';
+import { Painting } from '../types';
+import { getPaintingInsights } from '../services/geminiService';
+import { Sparkles, MessageCircle, Send } from 'lucide-react';
+
+interface AIGuideProps {
+  painting: Painting;
+}
+
+const AIGuide: React.FC<AIGuideProps> = ({ painting }) => {
+  const [insight, setInsight] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [userQuestion, setUserQuestion] = useState<string>('');
+  const [chatMode, setChatMode] = useState<boolean>(false);
+
+  // Reset state when painting changes
+  useEffect(() => {
+    setInsight('');
+    setUserQuestion('');
+    setChatMode(false);
+    fetchInitialInsight();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [painting.id]);
+
+  const fetchInitialInsight = async () => {
+    setLoading(true);
+    const result = await getPaintingInsights(painting);
+    setInsight(result);
+    setLoading(false);
+  };
+
+  const handleAskQuestion = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userQuestion.trim()) return;
+
+    setLoading(true);
+    setChatMode(true);
+    const result = await getPaintingInsights(painting, userQuestion);
+    setInsight(result);
+    setLoading(false);
+    setUserQuestion('');
+  };
+
+  return (
+    <div className="mt-8 bg-gray-800/50 rounded-xl p-6 border border-gold-500/20 shadow-lg">
+      <div className="flex items-center gap-2 mb-4 text-gold-400">
+        <Sparkles className="w-5 h-5" />
+        <h3 className="font-serif text-xl font-semibold">AI Curator Insights</h3>
+      </div>
+
+      <div className="min-h-[100px] text-gray-300 leading-relaxed bg-black/20 p-4 rounded-lg">
+        {loading ? (
+          <div className="flex items-center gap-2 text-gray-400 animate-pulse">
+            <div className="w-2 h-2 bg-gold-500 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+            <div className="w-2 h-2 bg-gold-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+            <div className="w-2 h-2 bg-gold-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+            <span className="text-sm font-mono">Consulting the archives...</span>
+          </div>
+        ) : (
+          <p className="font-light">{insight}</p>
+        )}
+      </div>
+
+      <div className="mt-4 pt-4 border-t border-gray-700/50">
+        <form onSubmit={handleAskQuestion} className="flex gap-2">
+          <div className="relative flex-1">
+            <MessageCircle className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
+            <input 
+              type="text" 
+              value={userQuestion}
+              onChange={(e) => setUserQuestion(e.target.value)}
+              placeholder="Ask a specific question about this artwork..."
+              className="w-full bg-gray-900 border border-gray-700 rounded-lg py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-gold-500 transition-colors"
+            />
+          </div>
+          <button 
+            type="submit"
+            disabled={loading || !userQuestion.trim()}
+            className="bg-gold-600 hover:bg-gold-500 disabled:opacity-50 disabled:cursor-not-allowed text-black p-2.5 rounded-lg transition-colors"
+          >
+            <Send className="w-5 h-5" />
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default AIGuide;
