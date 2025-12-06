@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classic Art Explorer</title>
+    
+    <!-- 原来的代码 -->
+    <script>
+      // Suppress the Tailwind CDN production warning
+      if (typeof console !== 'undefined' && console.warn) {
+        const originalWarn = console.warn;
+        console.warn = function(...args) {
+          if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com')) {
+            return;
+          }
+          originalWarn.apply(console, args);
+        };
+      }
+    </script>
+    
+    <!-- 原来的代码 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- 原来的代码 -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['"Playfair Display"', 'serif'],
+              sans: ['"Lato"', 'sans-serif'],
+            },
+            colors: {
+              gold: {
+                400: '#D4AF37',
+                500: '#C5A028',
+                600: '#B08D1E',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- 原来的代码 -->
+    <style>
+      /* Custom scrollbar for horizontal gallery */
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+    
+    <!-- 原来的代码 -->
+    <script type="importmap">
+    {
+      "imports": {
+        "react/": "https://aistudiocdn.com/react@^19.2.0/",
+        "react": "https://aistudiocdn.com/react@^19.2.0",
+        "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+        "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+      }
+    }
+    </script>
+    
+    <!-- 修复：删除这行，因为我们现在用Vite -->
+    <!-- <link rel="stylesheet" href="/index.css"> -->
+    
+  </head>
+  
+  <!-- 原来的代码 -->
+  <body class="bg-gray-950 text-gray-200 font-sans antialiased selection:bg-gold-500 selection:text-white">
+    <div id="root"></div>
+    
+    <!-- 修复：改为正确的路径 -->
+    <script type="module" src="/src/index.tsx"></script>
+    
+  </body>
+</html>
